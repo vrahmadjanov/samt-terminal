@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
+import styled from 'styled-components';
 import logo from './logo.svg';
 
-// Mock data
+
+// Mock данные
 const specialties = [
   { id: 1, name: 'Терапевт' },
   { id: 2, name: 'Хирург' },
@@ -37,7 +38,186 @@ const timeSlots = [
   '16:00', '16:30'
 ];
 
-function App() {
+// ==================== Компоненты UI ====================
+const TerminalContainer = styled.div`
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  width: 768px;
+  height: 1024px;
+  overflow: hidden;
+  position: relative;
+  padding: 20px;
+  box-sizing: border-box;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+  }
+`;
+
+const Screen = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const WelcomeScreen = styled(Screen)`
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+`;
+
+const AppLogo = styled.img`
+  height: 150px;
+  pointer-events: none;
+  margin-bottom: 30px;
+`;
+
+const Title = styled.h1`
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 20px;
+`;
+
+const Subtitle = styled.h2`
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 10px;
+`;
+
+const Text = styled.p`
+  text-align: center;
+  color: #666;
+`;
+
+const PhoneInputContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 30px 0;
+`;
+
+const CountryCode = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  background-color: #f0f0f0;
+  border-radius: 5px 0 0 5px;
+  font-size: 18px;
+`;
+
+const Flag = styled.span`
+  margin-right: 10px;
+  font-size: 24px;
+`;
+
+const PhoneInput = styled.input`
+  flex: 1;
+  padding: 15px;
+  font-size: 18px;
+  border: 1px solid #ddd;
+  border-radius: 0 5px 5px 0;
+  outline: none;
+`;
+
+const Button = styled.button`
+  padding: 15px;
+  background-color: ${props => props.disabled ? '#ccc' : '#61dafb'};
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  margin-top: auto;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: ${props => props.disabled ? '#ccc' : '#21a1f1'};
+  }
+`;
+
+const OptionsList = styled.div`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 15px;
+  margin-top: 30px;
+`;
+
+const OptionCard = styled.div`
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: 1px solid #eee;
+
+  &:hover {
+    background-color: #e3f2fd;
+    transform: translateY(-2px);
+  }
+`;
+
+const DoctorName = styled.div`
+  font-weight: bold;
+  margin-bottom: 5px;
+`;
+
+const DoctorRoom = styled.div`
+  color: #666;
+`;
+
+const TimeSlotsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+  margin-top: 30px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+`;
+
+const TimeSlot = styled(OptionCard)`
+  text-align: center;
+`;
+
+const TicketCard = styled.div`
+  background-color: #e3f2fd;
+  border-radius: 10px;
+  padding: 30px;
+  margin: 30px 0;
+`;
+
+const TicketNumber = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  color: #1976d2;
+  margin-bottom: 20px;
+`;
+
+const TicketInfo = styled.div`
+  p {
+    margin: 10px 0;
+  }
+`;
+
+const TicketNotice = styled.div`
+  margin-top: 30px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 5px;
+  font-size: 14px;
+`;
+
+const Countdown = styled.div`
+  text-align: center;
+  color: #666;
+  margin-top: auto;
+`;
+
+// ==================== Основной компонент ====================
+const AppointmentTerminal = () => {
   const [step, setStep] = useState(1);
   const [phone, setPhone] = useState('');
   const [selectedSpecialty, setSelectedSpecialty] = useState(null);
@@ -46,7 +226,7 @@ function App() {
   const [ticketNumber, setTicketNumber] = useState(null);
 
   useEffect(() => {
-    if (step === 8) {
+    if (step === 7) {
       const timer = setTimeout(() => {
         resetApp();
       }, 10000);
@@ -80,7 +260,6 @@ function App() {
 
   const handleTimeSelect = (time) => {
     setSelectedTime(time);
-    // Generate random ticket number
     setTicketNumber(Math.floor(100000 + Math.random() * 900000));
     setStep(7);
   };
@@ -88,7 +267,6 @@ function App() {
   const handleNextStep = () => {
     if (step === 1) setStep(2);
     else if (step === 2 && phone.length === 9) setStep(3);
-    else if (step === 4) setStep(5);
     else if (step === 5) setStep(6);
   };
 
@@ -96,135 +274,125 @@ function App() {
     switch (step) {
       case 1:
         return (
-          <div className="welcome-screen" onClick={handleNextStep}>
-            <img src={logo} className="app-logo" alt="logo" />
-            <h1>Добро пожаловать в центр здоровья XX города XX</h1>
-            <p>Нажмите на экран для продолжения</p>
-          </div>
+          <WelcomeScreen onClick={handleNextStep}>
+            <AppLogo src={logo} alt="logo" />
+            <Title>Добро пожаловать в центр здоровья XX города XX</Title>
+            <Text>Нажмите на экран для продолжения</Text>
+          </WelcomeScreen>
         );
       case 2:
         return (
-          <div className="phone-screen">
-            <h2>Введите номер телефона</h2>
-            <p>Мы отправим SMS с подтверждением записи</p>
-            <div className="phone-input">
-              <div className="country-code">
-                <span className="flag">🇹🇯</span>
+          <Screen>
+            <Subtitle>Введите номер телефона</Subtitle>
+            <Text>Мы отправим SMS с подтверждением записи</Text>
+            <PhoneInputContainer>
+              <CountryCode>
+                <Flag>🇹🇯</Flag>
                 <span>+992</span>
-              </div>
-              <input
+              </CountryCode>
+              <PhoneInput
                 type="tel"
                 value={phone}
                 onChange={handlePhoneChange}
-                maxLength="9"
+                maxLength={9}
                 pattern="[0-9]*"
                 inputMode="numeric"
                 autoFocus
               />
-            </div>
-            <button 
+            </PhoneInputContainer>
+            <Button 
               onClick={handleNextStep} 
               disabled={phone.length !== 9}
-              className={phone.length === 9 ? 'active' : ''}
             >
               Продолжить
-            </button>
-          </div>
+            </Button>
+          </Screen>
         );
       case 3:
         return (
-          <div className="specialty-screen">
-            <h2>Выберите специальность врача</h2>
-            <div className="options-list">
+          <Screen>
+            <Subtitle>Выберите специальность врача</Subtitle>
+            <OptionsList>
               {specialties.map(spec => (
-                <div 
+                <OptionCard 
                   key={spec.id} 
-                  className="option-card"
                   onClick={() => handleSpecialtySelect(spec.id)}
                 >
                   {spec.name}
-                </div>
+                </OptionCard>
               ))}
-            </div>
-          </div>
+            </OptionsList>
+          </Screen>
         );
       case 4:
         return (
-          <div className="doctors-screen">
-            <h2>Выберите врача</h2>
-            <div className="options-list">
-              {doctors[selectedSpecialty]?.map(doctor => (
-                <div 
+          <Screen>
+            <Subtitle>Выберите врача</Subtitle>
+            <OptionsList>
+              {selectedSpecialty && doctors[selectedSpecialty]?.map(doctor => (
+                <OptionCard 
                   key={doctor.id} 
-                  className="option-card"
                   onClick={() => handleDoctorSelect(doctor)}
                 >
-                  <div className="doctor-name">{doctor.name}</div>
-                  <div className="doctor-room">Кабинет: {doctor.room}</div>
-                </div>
+                  <DoctorName>{doctor.name}</DoctorName>
+                  <DoctorRoom>Кабинет: {doctor.room}</DoctorRoom>
+                </OptionCard>
               ))}
-            </div>
-          </div>
+            </OptionsList>
+          </Screen>
         );
       case 5:
         return (
-          <div className="appointment-type-screen">
-            <h2>Выберите тип записи</h2>
-            <div className="options-list">
-              <div 
-                className="option-card"
-                onClick={() => setStep(6)}
-              >
+          <Screen>
+            <Subtitle>Выберите тип записи</Subtitle>
+            <OptionsList>
+              <OptionCard onClick={() => setStep(6)}>
                 Доступная очередь
-              </div>
-              <div 
-                className="option-card"
-                onClick={handleNextStep}
-              >
+              </OptionCard>
+              <OptionCard onClick={handleNextStep}>
                 Оформить предварительную запись
-              </div>
-            </div>
-          </div>
+              </OptionCard>
+            </OptionsList>
+          </Screen>
         );
       case 6:
         return (
-          <div className="time-slots-screen">
-            <h2>Доступные время записи</h2>
-            <p>Выберите удобное для вас время</p>
-            <div className="time-slots-grid">
+          <Screen>
+            <Subtitle>Доступные время записи</Subtitle>
+            <Text>Выберите удобное для вас время</Text>
+            <TimeSlotsGrid>
               {timeSlots.map((time, index) => (
-                <div 
+                <TimeSlot 
                   key={index} 
-                  className="time-slot"
                   onClick={() => handleTimeSelect(time)}
                 >
                   {time}
-                </div>
+                </TimeSlot>
               ))}
-            </div>
-          </div>
+            </TimeSlotsGrid>
+          </Screen>
         );
       case 7:
         return (
-          <div className="ticket-screen">
-            <h2>Ваш талон на прием</h2>
-            <div className="ticket-card">
-              <div className="ticket-number">Номер талона: {ticketNumber}</div>
-              <div className="ticket-info">
-                <p>Врач: {selectedDoctor.name}</p>
-                <p>Кабинет: {selectedDoctor.room}</p>
+          <Screen>
+            <Subtitle>Ваш талон на прием</Subtitle>
+            <TicketCard>
+              <TicketNumber>Номер талона: {ticketNumber}</TicketNumber>
+              <TicketInfo>
+                <p>Врач: {selectedDoctor?.name}</p>
+                <p>Кабинет: {selectedDoctor?.room}</p>
                 <p>Время: {selectedTime}</p>
                 <p>Дата: {new Date().toLocaleDateString()}</p>
-              </div>
-              <div className="ticket-notice">
+              </TicketInfo>
+              <TicketNotice>
                 Пожалуйста, сфотографируйте этот талон или запишите номер.
                 На ваш номер телефона будет отправлено SMS с подтверждением.
-              </div>
-            </div>
-            <div className="countdown">
+              </TicketNotice>
+            </TicketCard>
+            <Countdown>
               Экран автоматически обновится через 10 секунд...
-            </div>
-          </div>
+            </Countdown>
+          </Screen>
         );
       default:
         return null;
@@ -233,11 +401,11 @@ function App() {
 
   return (
     <div className="app">
-      <div className="terminal-container">
+      <TerminalContainer>
         {renderStep()}
-      </div>
+      </TerminalContainer>
     </div>
   );
-}
+};
 
-export default App;
+export default AppointmentTerminal;
