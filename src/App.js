@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import logo from './logo.svg';
+import logo from './logo.png';
+import homeIcon from './home.svg';
+import WelcomePage from './pages/WelcomePage/WelcomePage';
+import PhonePage from './pages/PhonePage/PhonePage';
+import SpecialtyPage from './pages/SpecialtyPage/SpecialtyPage';
+import DoctorPage from './pages/DoctorPage/DoctorPage';
+import RecordTypePage from './pages/RecordTypePage/RecordTypePage';
+import TimePage from './pages/TimePage/TimePage';
+import TicketPage from './pages/TicketPage/TicketPage';
+import { BodyContainer, SquareContainer, Header, HomeButton, RuButton, TjButton, TimeText, Main, Footer, MarqueeFooter, MarqueeText } from './App.styled';
 
 
 // Mock данные
@@ -14,6 +22,10 @@ const specialties = [
 
 const doctors = {
   1: [
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+    { id: 102, name: 'Смирнов Алексей Иванович', room: '202' },
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+    { id: 102, name: 'Смирнов Алексей Иванович', room: '202' },
     { id: 101, name: 'Иванова Мария Петровна', room: '201' },
     { id: 102, name: 'Смирнов Алексей Иванович', room: '202' },
   ],
@@ -30,191 +42,202 @@ const doctors = {
   5: [
     { id: 501, name: 'Николаева Татьяна Владимировна', room: '601' },
   ],
+  6: [
+    { id: 601, name: 'Кардиолог Иванов И.И.', room: '701' },
+  ],
+  7: [
+    { id: 701, name: 'ЛОР Смирнова А.А.', room: '801' },
+  ],
+  8: [
+    { id: 801, name: 'Маммолог Петрова Е.В.', room: '901' },
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+    { id: 102, name: 'Смирнов Алексей Иванович', room: '202' },
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+    { id: 102, name: 'Смирнов Алексей Иванович', room: '202' },
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+    { id: 102, name: 'Смирнов Алексей Иванович', room: '202' },
+  ],
+  9: [
+    { id: 901, name: 'Невролог Сидоров П.П.', room: '1001' },
+  ],
+  10: [
+    { id: 1001, name: 'Окулист Козлова М.М.', room: '1101' },
+  ],
+  11: [
+    { id: 1101, name: 'Проктолог Волков В.В.', room: '1201' },
+  ],
+  12: [
+    { id: 1201, name: 'Психиатр Морозова Н.Н.', room: '1301' },
+  ],
+  13: [
+    { id: 1301, name: 'Психолог Лебедева О.О.', room: '1401' },
+  ],
+  14: [
+    { id: 1401, name: 'Психотерапевт Романова Л.Л.', room: '1501' },
+  ],
+  15: [
+    { id: 1501, name: 'Стоматолог Орлов А.А.', room: '1601' },
+    { id: 1502, name: 'Стоматолог Белова С.С.', room: '1602' },
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+    { id: 102, name: 'Смирнов Алексей Иванович', room: '202' },
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+    { id: 102, name: 'Смирнов Алексей Иванович', room: '202' },
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+    { id: 102, name: 'Смирнов Алексей Иванович', room: '202' },
+  ],
+  16: [
+    { id: 1501, name: 'Стоматолог Орлов А.А.', room: '1601' },
+    { id: 1502, name: 'Стоматолог Белова С.С.', room: '1602' },
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+    { id: 102, name: 'Смирнов Алексей Иванович', room: '202' },
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+    { id: 102, name: 'Смирнов Алексей Иванович', room: '202' },
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+    { id: 102, name: 'Смирнов Алексей Иванович', room: '202' },
+  ],
+  17: [
+    { id: 1701, name: 'Травматолог Голубев Д.Д.', room: '1801' },
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+    { id: 102, name: 'Смирнов Алексей Иванович', room: '202' },
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+  ],
+  18: [
+    { id: 1801, name: 'Уролог Соловьев К.К.', room: '1901' },
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+    { id: 102, name: 'Смирнов Алексей Иванович', room: '202' },
+    { id: 101, name: 'Иванова Мария Петровна', room: '201' },
+  ],
 };
 
 const timeSlots = [
-  '09:00', '09:30', '10:00', '10:30', '11:00', 
-  '11:30', '14:00', '14:30', '15:00', '15:30',
-  '16:00', '16:30'
+  { time: '09:00', is_available: true },
+  { time: '09:30', is_available: false },
+  { time: '10:00', is_available: true },
+  { time: '10:30', is_available: true },
+  { time: '11:00', is_available: false },
+  { time: '11:30', is_available: true },
+  { time: '14:00', is_available: true },
+  { time: '14:30', is_available: false },
+  { time: '15:00', is_available: true },
+  { time: '15:30', is_available: true },
+  { time: '16:00', is_available: false },
+  { time: '16:30', is_available: true },
 ];
 
-// ==================== Компоненты UI ====================
-const TerminalContainer = styled.div`
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-  width: 768px;
-  height: 1024px;
-  overflow: hidden;
-  position: relative;
-  padding: 20px;
-  box-sizing: border-box;
-
-  @media (max-width: 768px) {
-    width: 100%;
-    height: 100vh;
-    border-radius: 0;
+const translations = {
+  ru: {
+    welcome: 'Добро пожаловать в центр здоровья XX города XX',
+    continue: 'Нажмите на экран для продолжения',
+    phoneStep: 'Введите номер телефона',
+    specialtyStep: 'Выберите специальность',
+    doctorStep: 'Выберите врача',
+    recordTypeStep: 'Выберите тип записи',
+    timeStep: 'Выберите удобное время',
+    ticketStep: 'Получите талон',
+    // PhonePage
+    phoneTitle: 'Введите номер телефона',
+    phoneSubtitle: 'Для продолжения введите ваш номер телефона',
+    phonePlaceholder: 'Номер телефона',
+    phoneButton: 'Продолжить',
+    // SpecialtyPage
+    specialtyTitle: 'Выберите специальность',
+    specialtySubtitle: 'Выберите нужную вам специальность врача',
+    // DoctorPage
+    doctorTitle: 'Выберите врача',
+    doctorSubtitle: 'Выберите удобного для вас врача',
+    doctorRoom: 'Кабинет',
+    // RecordTypePage
+    recordTypeTitle: 'Выберите тип записи',
+    recordTypeSubtitle: 'Выберите подходящий тип записи',
+    queueButton: 'Записаться в очередь',
+    preRecordButton: 'Предварительная запись',
+    // TimePage
+    timeTitle: 'Выберите время',
+    timeSubtitle: 'Выберите удобное для вас время приема',
+    // TicketPage
+    ticketDoctor: 'Врач',
+    ticketRoom: 'Кабинет',
+    ticketTime: 'Время',
+    ticketDate: 'Дата',
+    // Specialties
+    specialtyTherapist: 'Терапевт',
+    specialtySurgeon: 'Хирург',
+    specialtyOphthalmologist: 'Офтальмолог',
+    specialtyNeurologist: 'Невролог',
+    specialtyCardiologist: 'Кардиолог',
+    specialtyLor: 'ЛОР',
+    specialtyMammologist: 'Маммолог',
+    specialtyPsychiatrist: 'Психиатр',
+    specialtyPsychologist: 'Психолог',
+    specialtyPsychotherapist: 'Психотерапевт',
+    specialtyDentist: 'Стоматолог',
+    specialtyTraumatologist: 'Травматолог',
+    specialtyUrologist: 'Уролог',
+    specialtyProctologist: 'Проктолог',
+    specialtyOculist: 'Окулист',
+    specialtyDermatologist: 'Дерматолог',
+    specialtyEndocrinologist: 'Эндокринолог',
+    specialtyGastroenterologist: 'Гастроэнтеролог',
+    specialtyGynecologist: 'Гинеколог',
+    specialtyOtolaryngologist: 'ЛОР (отоларинголог)',
+  },
+  tj: {
+    welcome: 'Ба маркази саломатии шаҳри XX хуш омадед',
+    continue: 'Барои идома додан экранро пахш кунед',
+    phoneStep: 'Рақами телефонро ворид кунед',
+    specialtyStep: 'Махсусиятро интихоб кунед',
+    doctorStep: 'Табибро интихоб кунед',
+    recordTypeStep: 'Навъи сабтро интихоб кунед',
+    timeStep: 'Вақти мувофиқро интихоб кунед',
+    ticketStep: 'Талон гиред',
+    // PhonePage
+    phoneTitle: 'Рақами телефонро ворид кунед',
+    phoneSubtitle: 'Барои идома додан рақами телефони худро ворид кунед',
+    phonePlaceholder: 'Рақами телефон',
+    phoneButton: 'Идома додан',
+    // SpecialtyPage
+    specialtyTitle: 'Махсусиятро интихоб кунед',
+    specialtySubtitle: 'Махсусияти табиби лозимро интихоб кунед',
+    // DoctorPage
+    doctorTitle: 'Табибро интихоб кунед',
+    doctorSubtitle: 'Табиби мувофиқро интихоб кунед',
+    doctorRoom: 'Хона',
+    // RecordTypePage
+    recordTypeTitle: 'Навъи сабтро интихоб кунед',
+    recordTypeSubtitle: 'Навъи сабти мувофиқро интихоб кунед',
+    queueButton: 'Дар навбат сабт шавед',
+    preRecordButton: 'Сабти пешакӣ',
+    // TimePage
+    timeTitle: 'Вақтро интихоб кунед',
+    timeSubtitle: 'Вақти мувофиқи худро интихоб кунед',
+    // TicketPage
+    ticketDoctor: 'Табиб',
+    ticketRoom: 'Хона',
+    ticketTime: 'Вақт',
+    ticketDate: 'Сана',
+    // Specialties
+    specialtyTherapist: 'Терапевт',
+    specialtySurgeon: 'Ҳирург',
+    specialtyOphthalmologist: 'Офтальмолог',
+    specialtyNeurologist: 'Невролог',
+    specialtyCardiologist: 'Кардиолог',
+    specialtyLor: 'ЛОР',
+    specialtyMammologist: 'Маммолог',
+    specialtyPsychiatrist: 'Психиатр',
+    specialtyPsychologist: 'Психолог',
+    specialtyPsychotherapist: 'Психотерапевт',
+    specialtyDentist: 'Дандонпизишк',
+    specialtyTraumatologist: 'Травматолог',
+    specialtyUrologist: 'Уролог',
+    specialtyProctologist: 'Проктолог',
+    specialtyOculist: 'Окулист',
+    specialtyDermatologist: 'Дерматолог',
+    specialtyEndocrinologist: 'Эндокринолог',
+    specialtyGastroenterologist: 'Гастроэнтеролог',
+    specialtyGynecologist: 'Гинеколог',
+    specialtyOtolaryngologist: 'ЛОР (отоларинголог)',
   }
-`;
-
-const Screen = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
-
-const WelcomeScreen = styled(Screen)`
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-`;
-
-const AppLogo = styled.img`
-  height: 150px;
-  pointer-events: none;
-  margin-bottom: 30px;
-`;
-
-const Title = styled.h1`
-  color: #2c3e50;
-  text-align: center;
-  margin-bottom: 20px;
-`;
-
-const Subtitle = styled.h2`
-  color: #2c3e50;
-  text-align: center;
-  margin-bottom: 10px;
-`;
-
-const Text = styled.p`
-  text-align: center;
-  color: #666;
-`;
-
-const PhoneInputContainer = styled.div`
-  display: flex;
-  align-items: center;
-  margin: 30px 0;
-`;
-
-const CountryCode = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 15px;
-  background-color: #f0f0f0;
-  border-radius: 5px 0 0 5px;
-  font-size: 18px;
-`;
-
-const Flag = styled.span`
-  margin-right: 10px;
-  font-size: 24px;
-`;
-
-const PhoneInput = styled.input`
-  flex: 1;
-  padding: 15px;
-  font-size: 18px;
-  border: 1px solid #ddd;
-  border-radius: 0 5px 5px 0;
-  outline: none;
-`;
-
-const Button = styled.button`
-  padding: 15px;
-  background-color: ${props => props.disabled ? '#ccc' : '#61dafb'};
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 18px;
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-  margin-top: auto;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: ${props => props.disabled ? '#ccc' : '#21a1f1'};
-  }
-`;
-
-const OptionsList = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 15px;
-  margin-top: 30px;
-`;
-
-const OptionCard = styled.div`
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.2s;
-  border: 1px solid #eee;
-
-  &:hover {
-    background-color: #e3f2fd;
-    transform: translateY(-2px);
-  }
-`;
-
-const DoctorName = styled.div`
-  font-weight: bold;
-  margin-bottom: 5px;
-`;
-
-const DoctorRoom = styled.div`
-  color: #666;
-`;
-
-const TimeSlotsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin-top: 30px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-`;
-
-const TimeSlot = styled(OptionCard)`
-  text-align: center;
-`;
-
-const TicketCard = styled.div`
-  background-color: #e3f2fd;
-  border-radius: 10px;
-  padding: 30px;
-  margin: 30px 0;
-`;
-
-const TicketNumber = styled.div`
-  font-size: 24px;
-  font-weight: bold;
-  color: #1976d2;
-  margin-bottom: 20px;
-`;
-
-const TicketInfo = styled.div`
-  p {
-    margin: 10px 0;
-  }
-`;
-
-const TicketNotice = styled.div`
-  margin-top: 30px;
-  padding: 15px;
-  background-color: white;
-  border-radius: 5px;
-  font-size: 14px;
-`;
-
-const Countdown = styled.div`
-  text-align: center;
-  color: #666;
-  margin-top: auto;
-`;
+};
 
 // ==================== Основной компонент ====================
 const AppointmentTerminal = () => {
@@ -224,15 +247,34 @@ const AppointmentTerminal = () => {
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const [ticketNumber, setTicketNumber] = useState(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [language, setLanguage] = useState('ru');
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if (step === 7) {
+      const data = {
+        phone,
+        specialty: specialties.find(s => s.id === selectedSpecialty)?.name || null,
+        doctor: selectedDoctor ? {
+          name: selectedDoctor.name,
+          room: selectedDoctor.room
+        } : null,
+        time: selectedTime,
+        ticketNumber,
+        date: new Date().toLocaleDateString()
+      };
+      console.log('Данные пациента:', JSON.stringify(data, null, 2));
       const timer = setTimeout(() => {
         resetApp();
       }, 10000);
       return () => clearTimeout(timer);
     }
-  }, [step]);
+  }, [step, phone, selectedSpecialty, selectedDoctor, selectedTime, ticketNumber]);
 
   const resetApp = () => {
     setStep(1);
@@ -273,138 +315,96 @@ const AppointmentTerminal = () => {
   const renderStep = () => {
     switch (step) {
       case 1:
-        return (
-          <WelcomeScreen onClick={handleNextStep}>
-            <AppLogo src={logo} alt="logo" />
-            <Title>Добро пожаловать в центр здоровья XX города XX</Title>
-            <Text>Нажмите на экран для продолжения</Text>
-          </WelcomeScreen>
-        );
+        return <WelcomePage onNext={handleNextStep} logo={logo} title={translations[language].welcome} subtitle={translations[language].continue} />;
       case 2:
-        return (
-          <Screen>
-            <Subtitle>Введите номер телефона</Subtitle>
-            <Text>Мы отправим SMS с подтверждением записи</Text>
-            <PhoneInputContainer>
-              <CountryCode>
-                <Flag>🇹🇯</Flag>
-                <span>+992</span>
-              </CountryCode>
-              <PhoneInput
-                type="tel"
-                value={phone}
-                onChange={handlePhoneChange}
-                maxLength={9}
-                pattern="[0-9]*"
-                inputMode="numeric"
-                autoFocus
-              />
-            </PhoneInputContainer>
-            <Button 
-              onClick={handleNextStep} 
-              disabled={phone.length !== 9}
-            >
-              Продолжить
-            </Button>
-          </Screen>
-        );
+        return <PhonePage phone={phone} onPhoneChange={handlePhoneChange} onNext={handleNextStep} language={language} translations={translations} />;
       case 3:
-        return (
-          <Screen>
-            <Subtitle>Выберите специальность врача</Subtitle>
-            <OptionsList>
-              {specialties.map(spec => (
-                <OptionCard 
-                  key={spec.id} 
-                  onClick={() => handleSpecialtySelect(spec.id)}
-                >
-                  {spec.name}
-                </OptionCard>
-              ))}
-            </OptionsList>
-          </Screen>
-        );
+        return <SpecialtyPage onSpecialtySelect={handleSpecialtySelect} language={language} translations={translations} />;
       case 4:
-        return (
-          <Screen>
-            <Subtitle>Выберите врача</Subtitle>
-            <OptionsList>
-              {selectedSpecialty && doctors[selectedSpecialty]?.map(doctor => (
-                <OptionCard 
-                  key={doctor.id} 
-                  onClick={() => handleDoctorSelect(doctor)}
-                >
-                  <DoctorName>{doctor.name}</DoctorName>
-                  <DoctorRoom>Кабинет: {doctor.room}</DoctorRoom>
-                </OptionCard>
-              ))}
-            </OptionsList>
-          </Screen>
-        );
+        return <DoctorPage doctors={selectedSpecialty ? doctors[selectedSpecialty] : []} onSelect={handleDoctorSelect} language={language} translations={translations} />;
       case 5:
-        return (
-          <Screen>
-            <Subtitle>Выберите тип записи</Subtitle>
-            <OptionsList>
-              <OptionCard onClick={() => setStep(6)}>
-                Доступная очередь
-              </OptionCard>
-              <OptionCard onClick={handleNextStep}>
-                Оформить предварительную запись
-              </OptionCard>
-            </OptionsList>
-          </Screen>
-        );
+        return <RecordTypePage onQueue={() => setStep(6)} onPreRecord={handleNextStep} language={language} translations={translations} />;
       case 6:
-        return (
-          <Screen>
-            <Subtitle>Доступные время записи</Subtitle>
-            <Text>Выберите удобное для вас время</Text>
-            <TimeSlotsGrid>
-              {timeSlots.map((time, index) => (
-                <TimeSlot 
-                  key={index} 
-                  onClick={() => handleTimeSelect(time)}
-                >
-                  {time}
-                </TimeSlot>
-              ))}
-            </TimeSlotsGrid>
-          </Screen>
-        );
+        return <TimePage timeSlots={timeSlots} onSelect={handleTimeSelect} language={language} translations={translations} />;
       case 7:
-        return (
-          <Screen>
-            <Subtitle>Ваш талон на прием</Subtitle>
-            <TicketCard>
-              <TicketNumber>Номер талона: {ticketNumber}</TicketNumber>
-              <TicketInfo>
-                <p>Врач: {selectedDoctor?.name}</p>
-                <p>Кабинет: {selectedDoctor?.room}</p>
-                <p>Время: {selectedTime}</p>
-                <p>Дата: {new Date().toLocaleDateString()}</p>
-              </TicketInfo>
-              <TicketNotice>
-                Пожалуйста, сфотографируйте этот талон или запишите номер.
-                На ваш номер телефона будет отправлено SMS с подтверждением.
-              </TicketNotice>
-            </TicketCard>
-            <Countdown>
-              Экран автоматически обновится через 10 секунд...
-            </Countdown>
-          </Screen>
-        );
+        return <TicketPage ticketNumber={ticketNumber} doctor={selectedDoctor} time={selectedTime} date={new Date().toLocaleDateString()} language={language} translations={translations} />;
       default:
         return null;
     }
   };
 
   return (
-    <div className="app">
-      <TerminalContainer>
-        {renderStep()}
-      </TerminalContainer>
-    </div>
+    <BodyContainer>
+      <SquareContainer>
+      <Header>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <HomeButton onClick={resetApp} aria-label={language === 'ru' ? 'На главный экран' : 'Ба саҳифаи асосӣ'}>
+            <img src={homeIcon} alt={language === 'ru' ? 'На главный экран' : 'Ба саҳифаи асосӣ'} />
+          </HomeButton>
+          <RuButton 
+            $active={language === 'ru'} 
+            onClick={() => setLanguage('ru')} 
+            aria-label="Русский язык"
+          >
+            Ru
+          </RuButton>
+          <TjButton 
+            $active={language === 'tj'} 
+            onClick={() => setLanguage('tj')} 
+            aria-label="Тоҷикӣ забон"
+          >
+            Tj
+          </TjButton>
+        </div>
+        <div></div> {/* Пустой элемент для центрирования */}
+        <TimeText>
+          {currentTime.toLocaleDateString('ru-RU', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          })}
+          {' | '}
+          {currentTime.toLocaleTimeString('ru-RU', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: false 
+          })}
+        </TimeText>
+      </Header>
+        <Main>
+          {renderStep()}
+        </Main>
+        <Footer>
+          <MarqueeFooter>
+            <MarqueeText>
+              <span><span className="step">1</span> {translations[language].phoneStep}</span>
+              <span className="arrow">→</span>
+              <span><span className="step">2</span> {translations[language].specialtyStep}</span>
+              <span className="arrow">→</span>
+              <span><span className="step">3</span> {translations[language].doctorStep}</span>
+              <span className="arrow">→</span>
+              <span><span className="step">4</span> {translations[language].recordTypeStep}</span>
+              <span className="arrow">→</span>
+              <span><span className="step">5</span> {translations[language].timeStep}</span>
+              <span className="arrow">→</span>
+              <span><span className="step">6</span> {translations[language].ticketStep}</span>
+              &nbsp;&nbsp;&nbsp;&nbsp;
+              <span><span className="step">1</span> {translations[language].phoneStep}</span>
+              <span className="arrow">→</span>
+              <span><span className="step">2</span> {translations[language].specialtyStep}</span>
+              <span className="arrow">→</span>
+              <span><span className="step">3</span> {translations[language].doctorStep}</span>
+              <span className="arrow">→</span>
+              <span><span className="step">4</span> {translations[language].recordTypeStep}</span>
+              <span className="arrow">→</span>
+              <span><span className="step">5</span> {translations[language].timeStep}</span>
+              <span className="arrow">→</span>
+              <span><span className="step">6</span> {translations[language].ticketStep}</span>
+            </MarqueeText>
+          </MarqueeFooter>
+        </Footer>
+      </SquareContainer>
+    </BodyContainer>
   );
 };
 
