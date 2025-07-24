@@ -178,7 +178,7 @@ export const MarqueeText = styled.span`
   font-weight: 500;
   padding: 0.5rem 0;
   padding-left: 100%;
-  animation: marquee 20s linear infinite;
+  animation: marquee 35s linear infinite;
   
   @keyframes marquee {
     0% { transform: translateX(0); }

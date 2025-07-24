@@ -152,7 +152,7 @@ const translations = {
     queueButton: 'Записаться в очередь',
     preRecordButton: 'Предварительная запись',
     // TimePage
-    timeTitle: 'Выберите время',
+    timeTitle: 'Выберите время на сегодня',
     timeSubtitle: 'Выберите удобное для вас время приема',
     // TicketPage
     ticketDoctor: 'Врач',
@@ -188,7 +188,7 @@ const translations = {
     specialtyStep: 'Махсусиятро интихоб кунед',
     doctorStep: 'Табибро интихоб кунед',
     recordTypeStep: 'Навъи сабтро интихоб кунед',
-    timeStep: 'Вақти мувофиқро интихоб кунед',
+    timeStep: 'Вақти мувофиқро интихоб кунед (имруз)',
     ticketStep: 'Талон гиред',
     // PhonePage
     phoneTitle: 'Рақами телефонро ворид кунед',
@@ -300,6 +300,13 @@ const AppointmentTerminal = () => {
     setStep(5);
   };
 
+  // Для живой очереди — сразу выдаём талон без времени
+  const handleQueue = () => {
+    setSelectedTime(null);
+    setTicketNumber(Math.floor(100000 + Math.random() * 900000));
+    setStep(7);
+  };
+
   const handleTimeSelect = (time) => {
     setSelectedTime(time);
     setTicketNumber(Math.floor(100000 + Math.random() * 900000));
@@ -323,7 +330,7 @@ const AppointmentTerminal = () => {
       case 4:
         return <DoctorPage doctors={selectedSpecialty ? doctors[selectedSpecialty] : []} onSelect={handleDoctorSelect} language={language} translations={translations} />;
       case 5:
-        return <RecordTypePage onQueue={() => setStep(6)} onPreRecord={handleNextStep} language={language} translations={translations} />;
+        return <RecordTypePage onQueue={handleQueue} onPreRecord={handleNextStep} language={language} translations={translations} />;
       case 6:
         return <TimePage timeSlots={timeSlots} onSelect={handleTimeSelect} language={language} translations={translations} />;
       case 7:
